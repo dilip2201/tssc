@@ -32,6 +32,13 @@
 								</a>
 								
 							</li>
+							<li class="menu-item menu-item-submenu menu-item-rel"  >
+								<a href="{{ url('salesdata')}}" class="menu-link {{ activeMenu('salesdata')}} {{ activeMenu('import')}}">
+									<span class="menu-text">Database</span>
+									<i class="menu-arrow"></i>
+								</a>
+								
+							</li>
 							
 						</ul>
 						<!--end::Header Nav-->

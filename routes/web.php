@@ -20,6 +20,13 @@ Auth::routes();
 Route::get('/dashboard', 'DashboardController@index');
 Route::get('/users', 'UsersController@index');
 
+Route::group(['prefix' => 'salesdata'], function () { 
+	Route::get('/', 'DatabaseController@index');
+	Route::get('/import', 'DatabaseController@import');
+	Route::post('/import', 'DatabaseController@importsubmit');
+});
+
+
 
 
 
