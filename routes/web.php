@@ -25,6 +25,13 @@ Route::post('users/store', 'UsersController@store')->name('users.store');
 Route::get('users/delete/{id}', 'UsersController@destroy')->name('users.destroy');
 Route::post('users/changestatus', 'UsersController@changeStatus')->name('users.changestatus');
 
+Route::group(['prefix' => 'salesdata'], function () { 
+	Route::get('/', 'DatabaseController@index');
+	Route::get('/import', 'DatabaseController@import');
+	Route::post('/import', 'DatabaseController@importsubmit');
+});
+
+
 
 
 
