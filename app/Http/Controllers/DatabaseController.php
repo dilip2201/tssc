@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -31,6 +33,62 @@ class DatabaseController extends Controller
         return view('salesdata.index');
     }
 
+    public function getAll(Request $request)
+    {
+        $data = [];
+        $params = $request->all();
+        $salesdata = new SalesData;
+        if (!empty($params['search']['value'])) {
+            $value = "%" . $params['search']['value'] . "%";
+            $salesdata = $salesdata->where('order_id', 'like', (string)$value);
+            $salesdata = $salesdata->where('name', 'like', (string)$value);
+            $salesdata = $salesdata->where('email', 'like', (string)$value);
+        }
+        $column = $params['order'][0]['column'];
+        $order = $params['order'][0]['dir'];
+        $columnname = $params['columns'][$column]['data'];
+        $salesdata = $salesdata->orderBy($columnname,$order);
+        $userCount = $salesdata->count();
+        $totalRecords = $userCount;
+        $salesdata = $salesdata->offset($params['start'])->take($params['length']);
+        $salesdata = $salesdata->get();
+        foreach ($salesdata as $row) {
+            $id = encrypt($row->id);
+            $actions = '<span style="overflow: visible; position: relative; width: 125px;">
+                            <a href="javascript:void(0);" class="btn btn-sm btn-clean btn-icon mr-2 btn-add-user" data-target=".add_modal" data-toggle="modal" data-id="'.$id.'" title="Edit details">
+                            <span class="svg-icon svg-icon-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <rect x="0" y="0" width="24" height="24"></rect><path d="M8,17.9148182 L8,5.96685884 C8,5.56391781 8.16211443,5.17792052 8.44982609,4.89581508 L10.965708,2.42895648 C11.5426798,1.86322723 12.4640974,1.85620921 13.0496196,2.41308426 L15.5337377,4.77566479 C15.8314604,5.0588212 16,5.45170806 16,5.86258077 L16,17.9148182 C16,18.7432453 15.3284271,19.4148182 14.5,19.4148182 L9.5,19.4148182 C8.67157288,19.4148182 8,18.7432453 8,17.9148182 Z" fill="#000000" fill-rule="nonzero" transform="translate(12.000000, 10.707409) rotate(-135.000000) translate(-12.000000, -10.707409) "></path>
+                            <rect fill="#000000" opacity="0.3" x="5" y="20" width="15" height="2" rx="1"></rect>
+                            </g></svg></span>
+                            </a>
+                            <a href="javascript:void(0);" class="btn btn-sm btn-clean btn-icon delete-user" data-id="'.$id.'" title="Delete">
+                            <span class="svg-icon svg-icon-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <rect x="0" y="0" width="24" height="24"></rect>
+                            <path d="M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z" fill="#000000" fill-rule="nonzero"></path>
+                            <path d="M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z" fill="#000000" opacity="0.3"></path></g></svg></span>
+                            </a>
+                       </span>';
+            $rowData['id'] = $row->id;
+            $rowData['order_id'] = $row->order_id;
+            $rowData['created'] = (!empty($row->created)) ? date('d M Y',strtotime($row->created)) : 'N/A';
+            $rowData['name'] = $row->name ?? 'N/A';
+            $rowData['email'] = $row->email ?? 'N/A';
+            $rowData['total'] = $row->total ?? 'N/A';
+            $rowData['company'] = (!empty($row->company)) ? $row->company  :  'N/A';
+            $rowData['action'] = $actions;
+            $data[] = $rowData;
+        }
+        $json_data = array(
+            "draw" => $params['draw'],
+            "recordsTotal" => $totalRecords,
+            "recordsFiltered" => $totalRecords,
+            "data" => $data   // total data array
+        );
+        return json_encode($json_data);
+    }
 
     /**
      * Show the application dashboard.
@@ -45,12 +103,12 @@ class DatabaseController extends Controller
     {
         return view('salesdata.importcategories');
     }
-    
+
     public function exportdata()
     {
         $sales = \DB::table('sales_data')->take(4)->get();
-        
-        
+
+
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         //Set Column width AUto
@@ -59,7 +117,7 @@ class DatabaseController extends Controller
                 ->setAutoSize(true);
         }
 
-       
+
         //Set Column Headings
         $sheet->setCellValue('A1', 'Order ID');
         $sheet->setCellValue('B1', 'Created');
@@ -71,7 +129,7 @@ class DatabaseController extends Controller
         $sheet->setCellValue('H1', 'Type');
         $sheet->setCellValue('I1', 'Link');
         // Set Row Data
-        
+
         $rowno = 2;
         foreach ($sales as $row) {
             $earray = explode('@', $row->email);
@@ -101,9 +159,9 @@ class DatabaseController extends Controller
         $response->headers->set('Content-Disposition', 'attachment;filename="'.$fileName.'"');
         $response->headers->set('Cache-Control','max-age=0');
         return $response;
-        
+
     }
-    
+
     public function importsubmit(Request $request)
     {
         $extension = '';
@@ -164,7 +222,7 @@ class DatabaseController extends Controller
                                 $errors[$i][] = array('type'=>"Name",'error'=>"Name should not be more than 50 character.");
                             }
 
-                           
+
                             $email =  $allDataInSheet[$i]['E'];
                             if(!empty($email) && strlen($email) > 100){
                                 $errors[$i][] = array('type'=>"Billing Email",'error'=>"Billing Email should not be more than 100 character.");
@@ -260,12 +318,12 @@ class DatabaseController extends Controller
                             $return .= '<tr>
                                 <th style="border:1px solid #000; color:#000; text-align:center;" >Field</th>
                                 <th style="border:1px solid #000; color:#000; text-align:center;">Error</th></tr>';
-                     
+
                             foreach ($errorarray as $finalerror) {
                                 $return .= '<tr>
                                 <td style="border:1px solid #000">'.$finalerror['type'].'</td>
                                 <td style="border:1px solid #000">'.$finalerror['error'].'</td></tr>';
-                       
+
                             }
                             $return .=  '</table>';
                         }
@@ -275,7 +333,7 @@ class DatabaseController extends Controller
                         if(!empty($finalarr)){
                             foreach ($finalarr as $sale) {
                                 $createdate = date('Y-m-d',strtotime($sale['created']));
-                                
+
                                 $new = new SalesData;
                                 $new->order_id = $sale['order_id'] ?? '';
                                 $new->created = $createdate;
@@ -384,12 +442,12 @@ class DatabaseController extends Controller
                                 $errors[$i][] = array('type'=>"Name",'error'=>"Link should not be more than 300 character.");
                             }
 
-                           
-                            
+
+
                             $finalarr[] = array('order_id'=>$order_id,'main_industry'=>$main_industry,'sub_industry'=>$sub_industry,'type'=>$type,'reference_link'=>$reference_link);
                         }
                     }
-                   
+
                     $return = '';
                     if(!empty($errors)){
                         $verify = 0;
@@ -402,12 +460,12 @@ class DatabaseController extends Controller
                             $return .= '<tr>
                                 <th style="border:1px solid #000; color:#000; text-align:center;" >Field</th>
                                 <th style="border:1px solid #000; color:#000; text-align:center;">Error</th></tr>';
-                     
+
                             foreach ($errorarray as $finalerror) {
                                 $return .= '<tr>
                                 <td style="border:1px solid #000">'.$finalerror['type'].'</td>
                                 <td style="border:1px solid #000">'.$finalerror['error'].'</td></tr>';
-                       
+
                             }
                             $return .=  '</table>';
                         }
@@ -416,8 +474,8 @@ class DatabaseController extends Controller
                     } else{
                         if(!empty($finalarr)){
                             foreach ($finalarr as $sale) {
-                                
-                                
+
+
                                 $new = SalesData::where('order_id',$sale['order_id'])->first();
                                 if(!empty($new)){
                                     $new->main_industry = $sale['main_industry'];
@@ -436,5 +494,5 @@ class DatabaseController extends Controller
         }
         return \Response::json($arr);
     }
-    
+
 }
