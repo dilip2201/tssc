@@ -38,8 +38,13 @@ class UsersController extends Controller
             $value = "%" . $params['search']['value'] . "%";
             $users = $users->where('name', 'like', (string)$value);
             $users = $users->orWhere('email', 'like', (string)$value);
+            $users = $users->orWhere('userId', 'like', (string)$value);
         }
         $users = $users->offset($params['start'])->take($params['length']);
+        $column = $params['order'][0]['column'];
+        $order = $params['order'][0]['dir'];
+        $columnname = $params['columns'][$column]['data'];
+        $users = $users->orderBy($columnname,$order);
         $users = $users->get()->except(Auth::id());
         $userCount = $users->count();
         $totalRecords = $userCount;
@@ -130,7 +135,8 @@ class UsersController extends Controller
             $rules['email'] = 'required|unique:users,email,'.$userid;
         }else{
             $rules['email'] = 'required|unique:users,email';
-            $rules['password'] = 'min:6|required_with:password_confirmation|same:password_confirmation';
+            $rules['password_confirmation'] = 'required';
+            $rules['password'] = 'required|min:6|required_with:password_confirmation|same:password_confirmation';
         }
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
