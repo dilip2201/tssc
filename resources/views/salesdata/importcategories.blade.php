@@ -1,6 +1,6 @@
 @extends('layout.app')
 @section('content')
-@section('pageTitle', 'Import Raw Data')
+@section('pageTitle', 'Import Data With Categories')
 @section('action')
 <div class="d-flex align-items-center">
   
@@ -68,16 +68,11 @@
 				<h3 class="card-label">Import your data
 				<span class="d-block text-muted pt-2 font-size-sm">Drag and drop your data below or click to select a file. You have to upload it in the correct format.<br> Any errors will be shown once uploaded.</span></h3>
 			</div>
-			<div class="card-toolbar">
-				<!--begin::Dropdown-->
 			
-				<a href="#" class="btn btn-primary font-weight-bolder"><i class="
-fa fa-download"></i> Download Sample</a>
-			</div>
 		</div>
 		<div class="card-body">
 			<div class="form-group row">
-				 <form action="{{ url('salesdata/import') }}" enctype="multipart/form-data" method="post" style="display: block; width: 100%;" class="importexcel">
+				 <form action="{{ url('salesdata/importcategories') }}" enctype="multipart/form-data" method="post" style="display: block; width: 100%;" class="importexcel">
 				 {{ csrf_field() }}
 				<div class="col-lg-12 col-md-12 col-sm-12" style="padding: 0px;">
 					 <div class="drop-zone">

@@ -15,6 +15,9 @@ a.menu-link.active>span.menu-text{
 a.menu-link.active:hover{
 	background: #6eb32b!important;
 }
+.scrolltop{
+	background-color: #6eb32b!important;
+}
 </style>
 <html lang="en">
 	<!--begin::Head-->
