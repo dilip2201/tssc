@@ -23,6 +23,10 @@ class ReportController extends Controller
      */
     public function index()
     {
-        return view('report.index');
+        $payment_methods = \DB::table('sales_data')->distinct()->pluck('payment_method')->toArray();
+        $payment_statuses = \DB::table('sales_data')->distinct()->pluck('payment_status')->toArray();
+        $taken_bys = \DB::table('sales_data')->distinct()->pluck('taken_by')->toArray();
+        return view('report.index',compact('payment_methods','payment_statuses','taken_bys'));
     }
 }
+
