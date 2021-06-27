@@ -21,23 +21,21 @@
                        value="@if(!empty($user)){{ $user->email }}@endif" required>
             </div>
         </div>
-        @if(empty($user->id))
-            <div class="col-sm-12 col-md-6">
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" class="form-control " minlength="6" name="password"
-                           placeholder="password"
-                           value="" required>
-                </div>
+        <div class="col-sm-12 col-md-6">
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" class="form-control " minlength="6" name="password"
+                       placeholder="password"
+                       value="" >
             </div>
-            <div class="col-sm-12 col-md-6">
-                <div class="form-group">
-                    <label>Confirm Password</label>
-                    <input id="password_confirmation" class="form-control" type="password" placeholder="Confirm Password"
-                           name="password_confirmation" required>
-                </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <div class="form-group">
+                <label>Confirm Password</label>
+                <input id="password_confirmation" class="form-control" type="password" placeholder="Confirm Password"
+                       name="password_confirmation" >
             </div>
-        @endif
+        </div>
         <div class="col-sm-12 col-md-6">
             <div class="form-group">
                 <label for="role">Role</label>

@@ -69,7 +69,6 @@
             "autoWidth": false,
             processing: true,
             serverSide: true,
-            stateSave: true,
             ajax: {
                 'url': "{{ route('users.getall') }}",
                 'type': 'POST',
