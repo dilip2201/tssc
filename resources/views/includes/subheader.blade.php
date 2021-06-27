@@ -9,6 +9,8 @@
 				<h2 class="text-white font-weight-bold my-2 mr-5">@yield('pageTitle')</h2>
 				<!--end::Title-->
 				<!--begin::Breadcrumb-->
+				
+				@if(activeMenu('report') !== 'active')
 				<div class="d-flex align-items-center font-weight-bold my-2">
 					<!--begin::Item-->
 					<a href="{{ url('dashboard')}}" class="opacity-75 hover-opacity-100">
@@ -21,6 +23,7 @@
 					<!--end::Item-->
 				
 				</div>
+				@endif
 				<!--end::Breadcrumb-->
 			</div>
 			<!--end::Heading-->

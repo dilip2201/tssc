@@ -29,6 +29,14 @@ Route::group(['prefix' => 'salesdata'], function () {
 	Route::get('/', 'DatabaseController@index');
 	Route::get('/import', 'DatabaseController@import');
 	Route::post('/import', 'DatabaseController@importsubmit');
+	Route::get('/importcategories', 'DatabaseController@importcategories');
+	Route::post('/importcategories', 'DatabaseController@importcategoriessubmit');
+	Route::get('/exportdata', 'DatabaseController@exportdata');
+	
+});
+
+Route::group(['prefix' => 'report'], function () { 
+	Route::get('/', 'ReportController@index');
 });
 
 

@@ -5,7 +5,9 @@
 @section('action')
 <div class="d-flex align-items-center">
 	
-		<a href="{{ url('salesdata/import') }}" class="btn btn-white font-weight-bold py-3 px-6"><i class="fa fa-upload"></i> Import</a>
+		<a href="{{ url('salesdata/import') }}" style="padding: 3px 15px!important;" class="btn btn-white font-weight-bold py-3 px-6"><i class="fa fa-upload" style="font-size: 12px;"></i> Import Raw Data</a>
+		<a href="{{ url('salesdata/importcategories') }}" style="padding: 3px 15px!important; margin-left: 15px;" class="btn btn-white font-weight-bold py-3 px-6"><i class="fa fa-upload" style="font-size: 12px;"></i> Import Data With Categories</a>
+		<a href="{{ url('salesdata/exportdata') }}" style="padding: 3px 15px!important; margin-left: 15px;" class="btn btn-white font-weight-bold py-3 px-6"><i class="fa fa-download" style="font-size: 12px;"></i> Export</a>
 		
 	
 	<!--end::Dropdown-->
