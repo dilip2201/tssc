@@ -47,6 +47,14 @@
 								
 							</li>
 							@endif
+
+							<li class="menu-item menu-item-submenu menu-item-rel"  >
+								<a href="{{ url('report')}}" class="menu-link {{ activeMenu('report')}} {{ activeMenu('import')}}">
+									<span class="menu-text">Report</span>
+									<i class="menu-arrow"></i>
+								</a>
+								
+							</li>
 							
 						</ul>
 						<!--end::Header Nav-->
