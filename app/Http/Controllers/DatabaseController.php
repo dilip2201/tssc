@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -491,6 +492,39 @@ class DatabaseController extends Controller
                 }else{
                     $arr = array("status" => 400, "msg" => "Please check your Excel file.");
                 }
+        }
+        return \Response::json($arr);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteMultiple(Request $request)
+    {
+        try {
+            $user = SalesData::whereIn('id',$request->ids);
+            if ($user) {
+                $user->delete();
+                $arr = array("status" => 200, "msg" => 'SalesData deleted successfully.');
+            } else {
+                $arr = array("status" => 400, "msg" => 'SalesData not found. please try again!');
+            }
+
+        } catch (\Illuminate\Database\QueryException $ex) {
+            $msg = 'You can not delete this as related data are there in system.';
+            if (isset($ex->errorInfo[2])) {
+                $msg = $ex->errorInfo[2];
+            }
+            $arr = array("status" => 400, "msg" => $msg, "result" => array());
+        } catch (Exception $ex) {
+            $msg = 'You can not delete this as related data are there in system.';
+            if (isset($ex->errorInfo[2])) {
+                $msg = $ex->errorInfo[2];
+            }
+            $arr = array("status" => 400, "msg" => $msg, "result" => array());
         }
         return \Response::json($arr);
     }

@@ -1,6 +1,6 @@
 @extends('layout.app')
 @section('content')
-@section('pageTitle', 'Database')
+@section('pageTitle','Database')
 
 @section('action')
 <div class="d-flex align-items-center">
@@ -14,6 +14,14 @@
 </div>
 <!--end::Toolbar-->
 @endsection
+<style>
+    .dataTables_wrapper .dataTables_paginate .pagination .page-item.active > .page-link{
+        background: #6eb32b !important;
+    }
+    .dataTables_wrapper .dataTables_paginate .pagination .page-item:hover:not(.disabled) > .page-link {
+        background: #6eb32b !important;
+    }
+</style>
 <!--begin::Container-->
 <div class="container">
     <div class="card card-custom">
@@ -22,7 +30,17 @@
             <!--begin::Search Form-->
             <div class="mb-7">
                 <div class="row align-items-center">
-                    <div class="col-lg-9 col-xl-9">
+                    <div class="col-lg-2 col-xl-3">
+
+                        <a href="javascript:void(0);" class="btn btn-primary font-weight-bolder mr-3 delete-databases" style="background: #6eb32b">
+                        <span class="svg-icon svg-icon-md">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <rect x="0" y="0" width="24" height="24"></rect>
+                            <path d="M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z" fill="#000000" fill-rule="nonzero"></path>
+                            <path d="M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z" fill="#000000" opacity="0.3"></path></g></svg>
+                        </span>Delete</a>
+                    </div>
+                    <div class="col-lg-7 col-xl-6">
                         <div class="row align-items-center">
                             <div class="col-md-6 my-2 my-md-0">
                                 <div class="d-flex align-items-center">
@@ -36,10 +54,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-xl-3 mt-5 mt-lg-0">
-                        <a href="javascript:void(0);" class="btn btn-light-primary px-6 font-weight-bold">Search</a>
-
-                        <a href="{{ url('salesdata/exportdata') }}" class="btn btn-primary font-weight-bolder ml-30">
+                    <div class="col-lg-3 col-xl-3 mt-5 mt-lg-0" style="text-align: right">
+                        <a href="javascript:void(0);" class="btn btn-light-primary px-6 font-weight-bold" style="background: #6eb32b;color: #fff">Search</a>
+                        <a href="{{ url('salesdata/exportdata') }}" class="btn btn-primary font-weight-bolder ml-3" style="background: #6eb32b;color: #fff">
                         <span class="svg-icon svg-icon-md">
                             <!--begin::Svg Icon | path:assets/media/svg/icons/Design/Flatten.svg-->
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -58,13 +75,13 @@
             <!--end: Search Form-->
             <!--begin: Datatable-->
             <div class="datatable datatable-bordered datatable-head-custom datatable-default datatable-primary datatable-subtable datatable-loaded" style="">
-                <table class="datatable-table" id="database"    >
+                <table class="datatable-table" id="database">
                     <thead class="datatable-head">
                     <tr class="datatable-row">
-                        <th data-field="checkbox" class="datatable-cell-center datatable-cell datatable-cell-check"><span style="width: 20px;">
-                            <label class="checkbox checkbox-single checkbox-all kt-checkbox--solid">
-                            <input type="checkbox">&nbsp;<span></span></label></span>
+                        <th data-field="checkbox" class=""><span style="width: 20px;">
+
                         </th>
+                        <th class="datatable-cell datatable-cell-sort"><span style="width: 110px;">Id</span></th>
                         <th class="datatable-cell datatable-cell-sort"><span style="width: 110px;">OrderId</span></th>
                         <th class="datatable-cell datatable-cell-sort"><span style="width: 110px;">Created</span></th>
                         <th class="datatable-cell datatable-cell-sort"><span style="width: 110px;">Name</span></th>
@@ -86,14 +103,17 @@
 </div>
     @push('link')
         <link href="{{ URL::asset('public/assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
+        <link type="text/css" href="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/css/dataTables.checkboxes.css" rel="stylesheet" />
+
     @endpush
 
     @push('script')
         <script src="{{ URL::asset('public/assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+        <script type="text/javascript" src="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/js/dataTables.checkboxes.min.js"></script>
         <script type="text/javascript">
             $(document).ready(function () {
                 /* datatable */
-                $("#database").DataTable({
+               var tbl = $("#database").DataTable({
                     "responsive": true,
                     "autoWidth": false,
                     processing: true,
@@ -105,7 +125,20 @@
                             d._token = "{{ csrf_token() }}";
                         }
                     },
+                    'columnDefs': [
+                        {
+                            'targets': 0,
+                            'checkboxes': {
+                                'selectRow': true,
+                                'label' : 'id'
+                            }
+                        }
+                    ],
+                    'select': {
+                        'style': 'multi'
+                    },
                     columns: [
+                        {data: 'id'},
                         {data: 'id'},
                         {data: 'order_id'},
                         {data: 'created'},
@@ -113,8 +146,57 @@
                         {data: 'email'},
                         {data: 'total'},
                         {data: 'company'},
-                        {data: 'action', "orderable": false},
+                        {data: 'action',  orderable: false},
                     ]
+                });
+
+
+                /********** Delete User ************/
+                $('body').on('click', '.delete-databases', function () {
+
+                    var selectedIds = tbl.columns().checkboxes.selected()[0];
+                    var ids = [];
+                    selectedIds.forEach(function(selectedId) {
+                        ids.push(selectedId);
+                    });
+                    if(ids.length > 0) {
+                        Swal.fire({
+                            title: "Are you sure?",
+                            text: "You want to delete Sales.",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonText: "Yes"
+                        }).then(function(result) {
+                            if (result.value) {
+                                $.ajax({
+                                    url: '{{ url("salesdata/deletemultiple") }}',
+                                    type: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                    },
+                                    data: {ids: ids},
+                                    success: function (data) {
+                                        if (data.status == 400) {
+                                            Swal.fire("Oh no!", "Something went wrong!", "error");
+                                        }
+                                        if (data.status == 200) {
+                                            $("#database").DataTable().ajax.reload();
+                                            Swal.fire(
+                                                "Deleted!",
+                                                data.msg,
+                                                "success"
+                                            )
+                                        }
+                                    },
+                                    error: function () {
+                                        Swal.fire("Oh no!", "Something went wrong!", "error");
+                                    }
+                                });
+                            }
+                        });
+                    } else {
+                        toastr.error('Please Select At least one record!','Oh No!');
+                    }
                 });
             });
         </script>

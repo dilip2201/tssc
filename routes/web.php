@@ -33,6 +33,7 @@ Route::group(['prefix' => 'salesdata'], function () {
 	Route::get('/importcategories', 'DatabaseController@importcategories');
 	Route::post('/importcategories', 'DatabaseController@importcategoriessubmit');
 	Route::get('/exportdata', 'DatabaseController@exportdata');
+	Route::post('/deletemultiple', 'DatabaseController@deleteMultiple');
 });
 
 Route::group(['prefix' => 'report'], function () {
