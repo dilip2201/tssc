@@ -18,6 +18,9 @@
 					<div id="kt_header_menu" class="header-menu header-menu-left header-menu-mobile header-menu-layout-default">
 						<!--begin::Header Nav-->
 						<ul class="menu-nav">
+							 @if(checkPermission(['superadmin','dashboard','data_access_only','data_access_without_import_export']))
+                
+                
 							<li class="menu-item menu-item-submenu menu-item-rel"  >
 								<a href="{{ url('dashboard')}}" class="menu-link {{ activeMenu('dashboard')}}">
 									<span class="menu-text">Dashboard</span>
@@ -25,6 +28,8 @@
 								</a>
 								
 							</li>
+							@endif
+							@if(checkPermission(['superadmin']))
 							<li class="menu-item menu-item-submenu menu-item-rel"  >
 								<a href="{{ url('users')}}" class="menu-link {{ activeMenu('users')}}">
 									<span class="menu-text">Users</span>
@@ -32,6 +37,8 @@
 								</a>
 								
 							</li>
+							@endif
+							@if(checkPermission(['superadmin']))
 							<li class="menu-item menu-item-submenu menu-item-rel"  >
 								<a href="{{ url('salesdata')}}" class="menu-link {{ activeMenu('salesdata')}} {{ activeMenu('import')}}">
 									<span class="menu-text">Database</span>
@@ -39,6 +46,7 @@
 								</a>
 								
 							</li>
+							@endif
 							
 						</ul>
 						<!--end::Header Nav-->

@@ -128,15 +128,14 @@ class UsersController extends Controller
             'name' => 'required',
             'email' => 'required|email',
             'role' => 'required',
-            'permission_period' => 'required',
         ];
         if (isset($request->userid)) {
             $userid = decrypt($request->userid);
             $rules['email'] = 'required|unique:users,email,'.$userid;
+            $rules['password'] = 'nullable|min:6';
         }else{
             $rules['email'] = 'required|unique:users,email';
-            $rules['password_confirmation'] = 'required';
-            $rules['password'] = 'required|min:6|required_with:password_confirmation|same:password_confirmation';
+            $rules['password'] = 'required|min:6';
         }
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
@@ -157,7 +156,7 @@ class UsersController extends Controller
                 $user->email = $request->email;
                 $user->role = $request->role;
                 $user->status = $request->status ?? 'inactive';
-                $user->permission_period = $request->permission_period;
+                
                 if(isset($request->password) && !empty($request->password)){
                     $user->password = Hash::make($request->password);
                 }

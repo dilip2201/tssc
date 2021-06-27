@@ -13,7 +13,19 @@
 					</div>
 					<div class="d-flex flex-column">
 						<a href="#" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary">{{ auth()->user()->name }}</a>
-						<div class="text-muted mt-1">Super Admin</div>
+						@php 
+						$role = 'Super admin';
+			            if(auth()->user()->role == 'dashboard') {
+			                $role = 'Dashboard';
+			            }
+			            if(auth()->user()->role == 'data_access_only') {
+			                $role = 'Data Access Only';
+			            }
+			            if(auth()->user()->role == 'data_access_without_import_export') {
+			                $role = 'Data Access without Import/Export';
+			            }
+						@endphp
+						<div class="text-muted mt-1">{{ $role }}</div>
 						<div class="navi mt-2">
 							<a class="btn btn-sm btn-light-primary font-weight-bolder py-2 px-5" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();

@@ -26,16 +26,11 @@
                 <label>Password</label>
                 <input type="password" class="form-control " minlength="6" name="password"
                        placeholder="password"
+                       @if(empty($user)) required @endif
                        value="" >
             </div>
         </div>
-        <div class="col-sm-12 col-md-6">
-            <div class="form-group">
-                <label>Confirm Password</label>
-                <input id="password_confirmation" class="form-control" type="password" placeholder="Confirm Password"
-                       name="password_confirmation" >
-            </div>
-        </div>
+       
         <div class="col-sm-12 col-md-6">
             <div class="form-group">
                 <label for="role">Role</label>
@@ -48,14 +43,7 @@
             </div>
         </div>
 
-        <div class="col-sm-12 col-md-6">
-            <div class="form-group">
-                <label for="role">Permission Period</label>
-                <input type="date" class="form-control " name="permission_period"
-                       placeholder="Permission Period"
-                       value="@if(!empty($user)){{$user->permission_period}}@endif" required>
-            </div>
-        </div>
+     
 
 
         <div class="col-sm-12 col-md-12">
@@ -69,29 +57,7 @@
                 </span>
             </div>
         </div>
-{{--        <div class="container-fluid">--}}
-{{--            <div class="row">--}}
-{{--                <div class="col-md-6">--}}
-{{--                    <div class="">--}}
 
-{{--                        <label>Profile Image</label>--}}
-{{--                        <input type="file" name="image" accept="image/*"--}}
-{{--                               class="logo_image" style="padding: 3px;"--}}
-{{--                               placeholder="Profile image">--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--                @php $image = url('public/company/employee/default.png'); @endphp--}}
-
-{{--                @if(!empty($user) && file_exists(public_path().'/company/employee/'.$user->image) && !empty($user->image))--}}
-{{--                    @php $image = url('public/company/employee/'.$user->image);  @endphp--}}
-{{--                @endif--}}
-{{--                <div class="col-sm-12 col-md-6">--}}
-{{--                    <div class="form-group">--}}
-{{--                        <span style=""><img src="{{$image}}" class="image_preview profile-user-img" width="auto" height="100px" style="margin-left: 60px;"></span>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </div>--}}
         <div class="col-md-12">
             <div class="text-right">
                 <button type="submit" style="background: #71ba2b;color: #fff;font-weight: 500" class="btn submitbutton spinner-right spinner-white"> Save </button>
