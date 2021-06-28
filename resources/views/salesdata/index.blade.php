@@ -3,12 +3,56 @@
 @section('pageTitle','Database')
 
 @section('action')
+<style type="text/css">
+    .selectwith .btn-group{
+    width: 100%;
+}
+button.multiselect.dropdown-toggle.btn.btn-default{
+    text-align: left;
+}
+ .multiselect-selected-text{
+    color: #3a3a3a;
+ }
+.checkbox > input{
+        opacity: 1!important;
+        position: inherit!important;
+        margin-bottom: 5px!important;
+            margin-right: 5px;
+}
+label.checkbox{
+    width: 100%;
+}
+.multiselect-container>li>a>label{
+        padding: 3px 20px 3px 15px!important;
+}
+ul.multiselect-container.dropdown-menu{
+    height: 200px;
+    overflow-y: scroll;
+}
+ul.multiselect-container.dropdown-menu::-webkit-scrollbar {
+  width: 5px;
+  height: 10px;          
+}
+ 
+ul.multiselect-container.dropdown-menu::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+
+ 
+ul.multiselect-container.dropdown-menu::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
+</style>
 <div class="d-flex align-items-center">
 
 		<a href="{{ url('salesdata/import') }}" style="padding: 3px 15px!important;" class="btn btn-white font-weight-bold py-3 px-6"><i class="fa fa-upload" style="font-size: 12px;"></i> Import Raw Data</a>
 		<a href="{{ url('salesdata/importcategories') }}" style="padding: 3px 15px!important; margin-left: 15px;" class="btn btn-white font-weight-bold py-3 px-6"><i class="fa fa-upload" style="font-size: 12px;"></i> Import Data With Categories</a>
 		<a href="#" style="padding: 3px 15px!important; margin-left: 15px;" class="btn btn-white font-weight-bold py-3 px-6"><i class="fa fa-download" style="font-size: 12px;"></i> Export</a>
+        <a href="#" style="padding: 3px 15px!important; margin-left: 15px;" class="btn btn-white font-weight-bold py-3 px-6 delete-databases"><i class="fa fa-trash" style="font-size: 12px;"></i> Delete</a>
 
+       
 
 	<!--end::Dropdown-->
 </div>
@@ -27,48 +71,120 @@
     <div class="card card-custom">
         <div class="card-body">
             <!--begin: Search Form-->
-            <!--begin::Search Form-->
-            <div class="mb-7">
-                <div class="row align-items-center">
-                    <div class="col-lg-2 col-xl-3">
-
-                        <a href="javascript:void(0);" class="btn btn-primary font-weight-bolder mr-3 delete-databases" style="background: #6eb32b">
-                        <span class="svg-icon svg-icon-md">
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                            <rect x="0" y="0" width="24" height="24"></rect>
-                            <path d="M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z" fill="#000000" fill-rule="nonzero"></path>
-                            <path d="M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z" fill="#000000" opacity="0.3"></path></g></svg>
-                        </span>Delete</a>
-                    </div>
-                    <div class="col-lg-7 col-xl-6">
-                        <div class="row align-items-center">
-                            <div class="col-md-6 my-2 my-md-0">
-                                <div class="d-flex align-items-center">
-                                    <label class="mr-3 mb-0 d-none d-md-block">From Date:</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6 my-2 my-md-0">
-                                <div class="d-flex align-items-center">
-                                    <label class="mr-3 mb-0 d-none d-md-block">To Date:</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-xl-3 mt-5 mt-lg-0" style="text-align: right">
-                        <a href="javascript:void(0);" class="btn btn-light-primary px-6 font-weight-bold" style="background: #6eb32b;color: #fff">Search</a>
-                        <a href="{{ url('salesdata/exportdata') }}" class="btn btn-primary font-weight-bolder ml-3" style="background: #6eb32b;color: #fff">
-                        <span class="svg-icon svg-icon-md">
-                            <!--begin::Svg Icon | path:assets/media/svg/icons/Design/Flatten.svg-->
-                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <rect x="0" y="0" width="24" height="24"></rect>
-                                    <path d="M3,16 L5,16 C5.55228475,16 6,15.5522847 6,15 C6,14.4477153 5.55228475,14 5,14 L3,14 L3,12 L5,12 C5.55228475,12 6,11.5522847 6,11 C6,10.4477153 5.55228475,10 5,10 L3,10 L3,8 L5,8 C5.55228475,8 6,7.55228475 6,7 C6,6.44771525 5.55228475,6 5,6 L3,6 L3,4 C3,3.44771525 3.44771525,3 4,3 L10,3 C10.5522847,3 11,3.44771525 11,4 L11,19 C11,19.5522847 10.5522847,20 10,20 L4,20 C3.44771525,20 3,19.5522847 3,19 L3,16 Z" fill="#000000" opacity="0.3"></path>
-                                    <path d="M16,3 L19,3 C20.1045695,3 21,3.8954305 21,5 L21,15.2485298 C21,15.7329761 20.8241635,16.200956 20.5051534,16.565539 L17.8762883,19.5699562 C17.6944473,19.7777745 17.378566,19.7988332 17.1707477,19.6169922 C17.1540423,19.602375 17.1383289,19.5866616 17.1237117,19.5699562 L14.4948466,16.565539 C14.1758365,16.200956 14,15.7329761 14,15.2485298 L14,5 C14,3.8954305 14.8954305,3 16,3 Z" fill="#000000"></path>
-                                </g>
-                            </svg>
-                            <!--end::Svg Icon-->
-                        </span>Export</a>
-                    </div>
+          
+            <div class="row ">
+                <div class="col-lg-3 col-md-3 col-sm-3 mb-7">
+                    <input class="form-control kt_daterangepicker_1" readonly="readonly" placeholder="Select time" type="text" />
+                </div>
+                @if(!empty($payment_methods))
+                <div class="col-lg-3 col-md-3 col-sm-3 mb-7 selectwith">
+                    <select id="multiple-checkboxes" class="payment_method" multiple="multiple">
+                        @foreach($payment_methods as $payment_method)
+                        <option value="{{ $payment_method }}">{{ $payment_method }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                @endif
+                @if(!empty($payment_statuses))
+                <div class="col-lg-3 col-md-3 col-sm-3 mb-7 selectwith">
+                    <select id="multiple-checkboxes" class="payment_status" multiple="multiple">
+                        @foreach($payment_statuses as $payment_status)
+                        <option value="{{ $payment_status }}">{{ $payment_status }}</option>
+                        @endforeach
+                        
+                    </select>
+                </div>
+                @endif
+                @if(!empty($taken_bys))
+                <div class="col-lg-3 col-md-3 col-sm-3 mb-7 selectwith">
+                    <select id="multiple-checkboxes" class="taken_bys" multiple="multiple">
+                        
+                        @foreach($taken_bys as $taken_by)
+                        <option value="{{ $taken_by }}">{{ $taken_by }}</option>
+                        @endforeach
+                        
+                    </select>
+                </div>
+                @endif
+                @if(!empty($companies))
+                 <div class="col-lg-3 col-md-3 col-sm-3 mb-7 selectwith">
+                    <select id="multiple-checkboxes" class="companies" multiple="multiple">
+                        
+                        @foreach($companies as $company)
+                        <option value="{{ $company }}">{{ $company }}</option>
+                        @endforeach
+                        
+                    </select>
+                </div>
+                @endif
+                @if(!empty($shippings))
+                <div class="col-lg-3 col-md-3 col-sm-3 mb-7 selectwith">
+                    <select id="multiple-checkboxes" class="shippings" multiple="multiple">
+                        
+                        @foreach($shippings as $shipping)
+                        <option value="{{ $shipping }}">{{ $shipping }}</option>
+                        @endforeach
+                        
+                    </select>
+                </div>
+                @endif
+                @if(!empty($b_citys))
+                <div class="col-lg-3 col-md-3 col-sm-3 mb-7 selectwith">
+                    <select id="multiple-checkboxes" class="b_citys" multiple="multiple">
+                        
+                        @foreach($b_citys as $b_city)
+                        <option value="{{ $b_city }}">{{ $b_city }}</option>
+                        @endforeach
+                        
+                    </select>
+                </div>
+                @endif
+                @if(!empty($skus))
+                <div class="col-lg-3 col-md-3 col-sm-3 mb-7 selectwith">
+                    <select id="multiple-checkboxes" class="skus" multiple="multiple">
+                        
+                        @foreach($skus as $sku)
+                        <option value="{{ $sku }}">{{ $sku }}</option>
+                        @endforeach
+                        
+                    </select>
+                </div>
+                @endif
+                @if(!empty($main_industries))
+                <div class="col-lg-3 col-md-3 col-sm-3 mb-7 selectwith">
+                    <select id="multiple-checkboxes" class="main_industries" multiple="multiple">
+                        
+                        @foreach($main_industries as $main_industry)
+                        <option value="{{ $main_industry }}">{{ $main_industry }}</option>
+                        @endforeach
+                        
+                    </select>
+                </div>
+                @endif
+                @if(!empty($sub_industries))
+                <div class="col-lg-3 col-md-3 col-sm-3 mb-7 selectwith">
+                    <select id="multiple-checkboxes" class="sub_industries" multiple="multiple">
+                        
+                        @foreach($sub_industries as $sub_industry)
+                        <option value="{{ $sub_industry }}">{{ $sub_industry }}</option>
+                        @endforeach
+                        
+                    </select>
+                </div>
+                @endif
+                @if(!empty($types))
+                <div class="col-lg-3 col-md-3 col-sm-3 mb-7 selectwith">
+                    <select id="multiple-checkboxes" class="types" multiple="multiple">
+                        
+                        @foreach($types as $type)
+                        <option value="{{ $type }}">{{ $type }}</option>
+                        @endforeach
+                        
+                    </select>
+                </div>
+                @endif
+                <div class="col-lg-3 col-md-3 col-sm-3 mb-7 selectwith">
+                   <button style="background: #71ba2b;" class="btn btn-primary clicktosearch">Search</button>
                 </div>
             </div>
             <!--end::Search Form-->
@@ -78,10 +194,7 @@
                 <table class="datatable-table" id="database">
                     <thead class="datatable-head">
                     <tr class="datatable-row">
-                        <th data-field="checkbox" class=""><span style="width: 20px;">
-
-                        </th>
-                        <th class="datatable-cell datatable-cell-sort"><span style="width: 110px;">Id</span></th>
+                        <th data-field="checkbox" class=""><span style="width: 20px;"></th>
                         <th class="datatable-cell datatable-cell-sort"><span style="width: 110px;">OrderId</span></th>
                         <th class="datatable-cell datatable-cell-sort"><span style="width: 110px;">Created</span></th>
                         <th class="datatable-cell datatable-cell-sort"><span style="width: 110px;">Name</span></th>
@@ -105,13 +218,116 @@
         <link href="{{ URL::asset('public/assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
         <link type="text/css" href="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/css/dataTables.checkboxes.css" rel="stylesheet" />
 
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
+
     @endpush
 
     @push('script')
         <script src="{{ URL::asset('public/assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
         <script type="text/javascript" src="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/js/dataTables.checkboxes.min.js"></script>
-        <script type="text/javascript">
-            $(document).ready(function () {
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
+  
+    <script type="text/javascript">
+        $(function(){
+            $('body').on('click','.clicktosearch',function(){
+                $('#database').DataTable().ajax.reload();
+            })
+            $('.kt_daterangepicker_1').daterangepicker({
+                buttonClasses: ' btn',
+                applyClass: 'btn-primary',
+                cancelClass: 'btn-secondary'
+            });
+            $('.payment_method').multiselect({
+              includeSelectAllOption: true,
+              selectAllText:' Select all',
+              filterPlaceholder: 'Search',
+              enableFiltering:true,
+              nonSelectedText: 'Payment Method',
+            });
+            $('.taken_bys').multiselect({
+              includeSelectAllOption: true,
+              selectAllText:' Select all',
+              filterPlaceholder: 'Search',
+              enableFiltering:true,
+              nonSelectedText: 'Taken By',
+            });
+
+            $('.companies').multiselect({
+              includeSelectAllOption: true,
+              selectAllText:' Select all',
+              filterPlaceholder: 'Search',
+              enableFiltering:true,
+              nonSelectedText: 'Company',
+
+
+            });
+             $('.shippings').multiselect({
+              includeSelectAllOption: true,
+              selectAllText:' Select all',
+              filterPlaceholder: 'Search',
+              enableFiltering:true,
+              nonSelectedText: 'Shipped Method',
+
+
+            });
+              $('.b_citys').multiselect({
+              includeSelectAllOption: true,
+              selectAllText:' Select all',
+              filterPlaceholder: 'Search',
+              enableFiltering:true,
+              nonSelectedText: 'City',
+              maxHeight:false,
+
+
+
+            });
+               $('.skus').multiselect({
+              includeSelectAllOption: true,
+              selectAllText:' Select all',
+              filterPlaceholder: 'Search',
+              enableFiltering:true,
+              nonSelectedText: 'SKU Numbers',
+
+
+            });
+                $('.main_industries').multiselect({
+              includeSelectAllOption: true,
+              selectAllText:' Select all',
+              filterPlaceholder: 'Search',
+              enableFiltering:true,
+              nonSelectedText: 'Main Industry',
+
+
+            });
+                 $('.sub_industries').multiselect({
+              includeSelectAllOption: true,
+              selectAllText:' Select all',
+              filterPlaceholder: 'Search',
+              enableFiltering:true,
+              nonSelectedText: 'Sub Industry',
+
+
+            });
+                  $('.types').multiselect({
+              includeSelectAllOption: true,
+              selectAllText:' Select all',
+              filterPlaceholder: 'Search',
+              enableFiltering:true,
+              nonSelectedText: 'Type',
+
+
+            });
+                
+                    $('.payment_status').multiselect({
+              includeSelectAllOption: true,
+              selectAllText:' Select all',
+              filterPlaceholder: 'Search',
+              enableFiltering:true,
+              nonSelectedText: 'Payment Status',
+
+
+            });
+            
                 /* datatable */
                var tbl = $("#database").DataTable({
                     "responsive": true,
@@ -123,6 +339,8 @@
                         'type': 'POST',
                         'data': function (d) {
                             d._token = "{{ csrf_token() }}";
+                            d.payment_method = $('.payment_method').val();
+
                         }
                     },
                     'columnDefs': [
@@ -138,7 +356,6 @@
                         'style': 'multi'
                     },
                     columns: [
-                        {data: 'id'},
                         {data: 'id'},
                         {data: 'order_id'},
                         {data: 'created'},
@@ -180,12 +397,7 @@
                                             Swal.fire("Oh no!", "Something went wrong!", "error");
                                         }
                                         if (data.status == 200) {
-                                            $("#database").DataTable().ajax.reload();
-                                            Swal.fire(
-                                                "Deleted!",
-                                                data.msg,
-                                                "success"
-                                            )
+                                            location.reload();
                                         }
                                     },
                                     error: function () {
@@ -195,7 +407,7 @@
                             }
                         });
                     } else {
-                        toastr.error('Please Select At least one record!','Oh No!');
+                        Swal.fire("Warning!", "Please Select At least one record!", "warning");
                     }
                 });
             });
