@@ -18,14 +18,15 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/dashboard', 'DashboardController@index');
-Route::get('/users', 'UsersController@index');
-Route::post('users/getall', 'UsersController@getAll')->name('users.getall');
-Route::post('users/getmodal', 'UsersController@getModal')->name('users.getmodal');
-Route::post('users/store', 'UsersController@store')->name('users.store');
-Route::get('users/delete/{id}', 'UsersController@destroy')->name('users.destroy');
-Route::post('users/changestatus', 'UsersController@changeStatus')->name('users.changestatus');
-
-Route::group(['prefix' => 'salesdata'], function () {
+Route::group(['middleware' => ['check-permission:superadmin']], function () {
+	Route::get('/users', 'UsersController@index');
+	Route::post('users/getall', 'UsersController@getAll')->name('users.getall');
+	Route::post('users/getmodal', 'UsersController@getModal')->name('users.getmodal');
+	Route::post('users/store', 'UsersController@store')->name('users.store');
+	Route::get('users/delete/{id}', 'UsersController@destroy')->name('users.destroy');
+	Route::post('users/changestatus', 'UsersController@changeStatus')->name('users.changestatus');
+});
+Route::group(['prefix' => 'salesdata','middleware' => ['check-permission:superadmin']], function () {
 	Route::get('/', 'DatabaseController@index');
 	Route::post('/getall', 'DatabaseController@getAll')->name('salesdata.getall');
 	Route::get('/import', 'DatabaseController@import');

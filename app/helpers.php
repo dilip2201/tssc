@@ -7,3 +7,21 @@ function activeMenu($uri = '') {
     }
     return $active;
 }
+
+/**
+ * For check permission
+ */
+function checkPermission($permissions)
+{
+    if (auth()->check()) {
+        $userAccess = auth()->user()->role;
+        foreach ($permissions as $key => $value) {
+            if ($value == $userAccess) {
+                return true;
+            }
+        }
+        return false;
+    } else {
+        return false;
+    }
+}

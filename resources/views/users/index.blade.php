@@ -20,7 +20,7 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>Role</th>
-                        <th>Permission Period</th>
+                        
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -81,7 +81,6 @@
                 {data: 'name'},
                 {data: 'email'},
                 {data: 'role',"orderable": false},
-                {data: 'permission_period'},
                 {data: 'status',"orderable": false},
                 {data: 'action', "orderable": false},
             ]
