@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Validator;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -46,6 +48,33 @@ class DatabaseController extends Controller
         return view('salesdata.index',compact('payment_methods','payment_statuses','taken_bys','companies','shippings','b_citys','skus','main_industries','sub_industries','types'));
 
     }
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function editView($id)
+    {
+        try {
+            $dbid = decrypt($id);
+            $payment_methods = \DB::table('sales_data')->WhereNotNull('payment_method')->where('payment_method','!=','')->distinct()->pluck('payment_method')->toArray();
+            $payment_statuses = \DB::table('sales_data')->WhereNotNull('payment_status')->where('payment_status','!=','')->distinct()->pluck('payment_status')->toArray();
+            $taken_bys = \DB::table('sales_data')->WhereNotNull('taken_by')->where('taken_by','!=','')->distinct()->pluck('taken_by')->toArray();
+            $companies = \DB::table('sales_data')->WhereNotNull('company')->where('company','!=','')->distinct()->pluck('company')->toArray();
+            $shippings = \DB::table('sales_data')->WhereNotNull('shipping')->where('shipping','!=','')->distinct()->pluck('shipping')->toArray();
+            $b_citys = \DB::table('sales_data')->WhereNotNull('b_city')->where('b_city','!=','')->distinct()->pluck('b_city')->toArray();
+            $skus = \DB::table('sales_data')->WhereNotNull('skus')->where('skus','!=','')->distinct()->pluck('skus')->toArray();
+            $main_industries = \DB::table('sales_data')->WhereNotNull('main_industry')->where('main_industry','!=','')->distinct()->pluck('main_industry')->toArray();
+            $sub_industries = \DB::table('sales_data')->WhereNotNull('sub_industry')->where('sub_industry','!=','')->distinct()->pluck('sub_industry')->toArray();
+            $types = \DB::table('sales_data')->WhereNotNull('type')->where('type','!=','')->distinct()->pluck('type')->toArray();
+
+            return view('salesdata.edit',compact('payment_methods','payment_statuses','taken_bys','companies','shippings','b_citys','skus','main_industries','sub_industries','types'));
+
+        } catch (DecryptException $e) {
+            return Redirect::to('salesdata')->withErrors(['Invalid Database Id.']);
+        }
+    }
+
 
     public function getAll(Request $request)
     {
@@ -61,6 +90,27 @@ class DatabaseController extends Controller
         if(!empty($request->payment_method)){
             $salesdata = $salesdata->whereIn('payment_method', $request->payment_method);
         }
+        if(!empty($request->payment_status)){
+            $salesdata = $salesdata->whereIn('payment_status', $request->payment_status);
+        }
+        if(!empty($request->takenby)){
+            $salesdata = $salesdata->whereIn('taken_by', $request->takenby);
+        }
+        if(!empty($request->companies)){
+            $salesdata = $salesdata->whereIn('company', $request->companies);
+        }
+        if(!empty($request->shippings)){
+            $salesdata = $salesdata->whereIn('shipping', $request->shippings);
+        }
+        if(!empty($request->b_citys)){
+            $salesdata = $salesdata->whereIn('b_city', $request->b_citys);
+        }
+        if(!empty($request->skus)){
+            $salesdata = $salesdata->whereIn('skus', $request->skus);
+        }
+        if((!empty($request->startdate) && $request->startdate =! '') && (!empty($request->enddate) && $request->enddate)){
+            $salesdata = $salesdata->whereBetween('created', array($request->startdate,$request->endadate));
+        }
         $column = $params['order'][0]['column'];
         $order = $params['order'][0]['dir'];
         $columnname = $params['columns'][$column]['data'];
@@ -71,7 +121,7 @@ class DatabaseController extends Controller
         $salesdata = $salesdata->get();
         foreach ($salesdata as $row) {
             $id = encrypt($row->id);
-            $actions = '<a href="" class=""><i class=" far fa-edit" style="font-size: 12px;"></i></a>';
+            $actions = '<a href="'.url('salesdata/edit').'/'.encrypt($row->id).'" ><i class=" far fa-edit" style="font-size: 12px;"></i></a>';
             $rowData['id'] = $row->id;
             $rowData['order_id'] = $row->order_id;
             $rowData['created'] = (!empty($row->created)) ? date('d M Y',strtotime($row->created)) : 'N/A';

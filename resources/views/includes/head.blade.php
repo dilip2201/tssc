@@ -15,5 +15,11 @@
 	<!--begin::Layout Themes(used by all pages)-->
 	<!--end::Layout Themes-->
 	<link rel="shortcut icon" href="{{ URL::asset('public/assets/media/logos/favicon.ico') }}" />
+    <style>
+        .btngreen {
+            background: #6eb32b !important;
+            color: #fff !important;
+        }
+    </style>
 	@stack('link')
 </head>

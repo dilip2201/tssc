@@ -31,15 +31,15 @@ ul.multiselect-container.dropdown-menu{
 }
 ul.multiselect-container.dropdown-menu::-webkit-scrollbar {
   width: 5px;
-  height: 10px;          
+  height: 10px;
 }
- 
+
 ul.multiselect-container.dropdown-menu::-webkit-scrollbar-track {
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
 
 
- 
+
 ul.multiselect-container.dropdown-menu::-webkit-scrollbar-thumb {
   background-color: darkgrey;
   outline: 1px solid slategrey;
@@ -52,7 +52,7 @@ ul.multiselect-container.dropdown-menu::-webkit-scrollbar-thumb {
 		<a href="#" style="padding: 3px 15px!important; margin-left: 15px;" class="btn btn-white font-weight-bold py-3 px-6"><i class="fa fa-download" style="font-size: 12px;"></i> Export</a>
         <a href="#" style="padding: 3px 15px!important; margin-left: 15px;" class="btn btn-white font-weight-bold py-3 px-6 delete-databases"><i class="fa fa-trash" style="font-size: 12px;"></i> Delete</a>
 
-       
+
 
 	<!--end::Dropdown-->
 </div>
@@ -71,10 +71,10 @@ ul.multiselect-container.dropdown-menu::-webkit-scrollbar-thumb {
     <div class="card card-custom">
         <div class="card-body">
             <!--begin: Search Form-->
-          
+
             <div class="row ">
                 <div class="col-lg-3 col-md-3 col-sm-3 mb-7">
-                    <input class="form-control kt_daterangepicker_1" readonly="readonly" placeholder="Select time" type="text" />
+                    <input class="form-control kt_daterangepicker_1" id="" readonly="readonly" placeholder="Select time" type="text" />
                 </div>
                 @if(!empty($payment_methods))
                 <div class="col-lg-3 col-md-3 col-sm-3 mb-7 selectwith">
@@ -91,95 +91,95 @@ ul.multiselect-container.dropdown-menu::-webkit-scrollbar-thumb {
                         @foreach($payment_statuses as $payment_status)
                         <option value="{{ $payment_status }}">{{ $payment_status }}</option>
                         @endforeach
-                        
+
                     </select>
                 </div>
                 @endif
                 @if(!empty($taken_bys))
                 <div class="col-lg-3 col-md-3 col-sm-3 mb-7 selectwith">
                     <select id="multiple-checkboxes" class="taken_bys" multiple="multiple">
-                        
+
                         @foreach($taken_bys as $taken_by)
                         <option value="{{ $taken_by }}">{{ $taken_by }}</option>
                         @endforeach
-                        
+
                     </select>
                 </div>
                 @endif
                 @if(!empty($companies))
                  <div class="col-lg-3 col-md-3 col-sm-3 mb-7 selectwith">
                     <select id="multiple-checkboxes" class="companies" multiple="multiple">
-                        
+
                         @foreach($companies as $company)
                         <option value="{{ $company }}">{{ $company }}</option>
                         @endforeach
-                        
+
                     </select>
                 </div>
                 @endif
                 @if(!empty($shippings))
                 <div class="col-lg-3 col-md-3 col-sm-3 mb-7 selectwith">
                     <select id="multiple-checkboxes" class="shippings" multiple="multiple">
-                        
+
                         @foreach($shippings as $shipping)
                         <option value="{{ $shipping }}">{{ $shipping }}</option>
                         @endforeach
-                        
+
                     </select>
                 </div>
                 @endif
                 @if(!empty($b_citys))
                 <div class="col-lg-3 col-md-3 col-sm-3 mb-7 selectwith">
                     <select id="multiple-checkboxes" class="b_citys" multiple="multiple">
-                        
+
                         @foreach($b_citys as $b_city)
                         <option value="{{ $b_city }}">{{ $b_city }}</option>
                         @endforeach
-                        
+
                     </select>
                 </div>
                 @endif
                 @if(!empty($skus))
                 <div class="col-lg-3 col-md-3 col-sm-3 mb-7 selectwith">
                     <select id="multiple-checkboxes" class="skus" multiple="multiple">
-                        
+
                         @foreach($skus as $sku)
                         <option value="{{ $sku }}">{{ $sku }}</option>
                         @endforeach
-                        
+
                     </select>
                 </div>
                 @endif
                 @if(!empty($main_industries))
                 <div class="col-lg-3 col-md-3 col-sm-3 mb-7 selectwith">
                     <select id="multiple-checkboxes" class="main_industries" multiple="multiple">
-                        
+
                         @foreach($main_industries as $main_industry)
                         <option value="{{ $main_industry }}">{{ $main_industry }}</option>
                         @endforeach
-                        
+
                     </select>
                 </div>
                 @endif
                 @if(!empty($sub_industries))
                 <div class="col-lg-3 col-md-3 col-sm-3 mb-7 selectwith">
                     <select id="multiple-checkboxes" class="sub_industries" multiple="multiple">
-                        
+
                         @foreach($sub_industries as $sub_industry)
                         <option value="{{ $sub_industry }}">{{ $sub_industry }}</option>
                         @endforeach
-                        
+
                     </select>
                 </div>
                 @endif
                 @if(!empty($types))
                 <div class="col-lg-3 col-md-3 col-sm-3 mb-7 selectwith">
                     <select id="multiple-checkboxes" class="types" multiple="multiple">
-                        
+
                         @foreach($types as $type)
                         <option value="{{ $type }}">{{ $type }}</option>
                         @endforeach
-                        
+
                     </select>
                 </div>
                 @endif
@@ -226,9 +226,13 @@ ul.multiselect-container.dropdown-menu::-webkit-scrollbar-thumb {
         <script src="{{ URL::asset('public/assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
         <script type="text/javascript" src="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/js/dataTables.checkboxes.min.js"></script>
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
-  
+
     <script type="text/javascript">
         $(function(){
+
+            @if($errors->any())
+                Swal.fire("Oh no!", "{{$errors->first()}}", "error");
+            @endif
             $('body').on('click','.clicktosearch',function(){
                 $('#database').DataTable().ajax.reload();
             })
@@ -317,7 +321,7 @@ ul.multiselect-container.dropdown-menu::-webkit-scrollbar-thumb {
 
 
             });
-                
+
                     $('.payment_status').multiselect({
               includeSelectAllOption: true,
               selectAllText:' Select all',
@@ -327,9 +331,10 @@ ul.multiselect-container.dropdown-menu::-webkit-scrollbar-thumb {
 
 
             });
-            
+                var startDate = '';
+                var endDate = '';
                 /* datatable */
-               var tbl = $("#database").DataTable({
+                var tbl = $("#database").DataTable({
                     "responsive": true,
                     "autoWidth": false,
                     processing: true,
@@ -340,7 +345,14 @@ ul.multiselect-container.dropdown-menu::-webkit-scrollbar-thumb {
                         'data': function (d) {
                             d._token = "{{ csrf_token() }}";
                             d.payment_method = $('.payment_method').val();
-
+                            d.takenby = $('.taken_bys').val();
+                            d.companies = $('.companies').val();
+                            d.shippings = $('.shippings').val();
+                            d.skus = $('.skus').val();
+                            d.b_citys = $('.b_citys').val();
+                            d.payment_status = $('.payment_status').val();
+                            d.startdate = startDate;
+                            d.enddate = endDate;
                         }
                     },
                     'columnDefs': [
