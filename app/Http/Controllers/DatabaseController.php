@@ -93,6 +93,15 @@ class DatabaseController extends Controller
         if(!empty($request->skus)){
             $salesdata = $salesdata->whereIn('skus', $request->skus);
         }
+        if(!empty($request->main_industries)){
+            $salesdata = $salesdata->whereIn('main_industry', $request->main_industries);
+        }
+        if(!empty($request->sub_industries)){
+            $salesdata = $salesdata->whereIn('sub_industry', $request->sub_industries);
+        }
+        if(!empty($request->types)){
+            $salesdata = $salesdata->whereIn('type', $request->types);
+        }
         if((!empty($request->startdate) && $request->startdate =! '') && (!empty($request->enddate) && $request->enddate)){
             $salesdata = $salesdata->whereBetween('created', array($request->startdate,$request->endadate));
         }

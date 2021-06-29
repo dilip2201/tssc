@@ -383,6 +383,9 @@ ul.multiselect-container.dropdown-menu::-webkit-scrollbar-thumb {
                         d.skus = $('.skus').val();
                         d.b_citys = $('.b_citys').val();
                         d.payment_status = $('.payment_status').val();
+                        d.main_industries = $('.main_industries').val();
+                        d.sub_industries = $('.sub_industries').val();
+                        d.types = $('.types').val();
                         d.startdate = startDate;
                         d.enddate = endDate;
                     }
