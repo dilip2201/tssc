@@ -7,7 +7,14 @@
 @endsection
 @section('content')
 @section('pageTitle', 'Users')
-
+<style>
+    .dataTables_wrapper .dataTables_paginate .pagination .page-item.active > .page-link{
+        background: #6eb32b !important;
+    }
+    .dataTables_wrapper .dataTables_paginate .pagination .page-item:hover:not(.disabled) > .page-link {
+        background: #6eb32b !important;
+    }
+</style>
 <!--begin::Container-->
 <div class="container">
 	<div class="card card-custom">
@@ -20,7 +27,7 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>Role</th>
-                        
+
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>

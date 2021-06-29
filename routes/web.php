@@ -16,6 +16,7 @@ Route::get('/', function () {
 });
 
 Auth::routes();
+
 Route::group(['middleware' => ['checkactivestatus']], function () {
 	Route::get('/dashboard', 'DashboardController@index');
 	Route::group(['middleware' => ['check-permission:superadmin']], function () {
@@ -40,6 +41,7 @@ Route::group(['middleware' => ['checkactivestatus']], function () {
 	Route::group(['prefix' => 'report'], function () {
 		Route::get('/', 'ReportController@index');
 	});
+
 });
 
 

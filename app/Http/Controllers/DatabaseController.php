@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Validator;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -46,6 +48,18 @@ class DatabaseController extends Controller
         return view('salesdata.index',compact('payment_methods','payment_statuses','taken_bys','companies','shippings','b_citys','skus','main_industries','sub_industries','types'));
 
     }
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function editView(Request $request)
+    {
+            $dbid = decrypt($request->id);
+            $salesdata = SalesData::where('id',$dbid)->first();
+            return view('salesdata.edit',compact('salesdata'));
+    }
+
 
     public function getAll(Request $request)
     {
@@ -61,6 +75,36 @@ class DatabaseController extends Controller
         if(!empty($request->payment_method)){
             $salesdata = $salesdata->whereIn('payment_method', $request->payment_method);
         }
+        if(!empty($request->payment_status)){
+            $salesdata = $salesdata->whereIn('payment_status', $request->payment_status);
+        }
+        if(!empty($request->takenby)){
+            $salesdata = $salesdata->whereIn('taken_by', $request->takenby);
+        }
+        if(!empty($request->companies)){
+            $salesdata = $salesdata->whereIn('company', $request->companies);
+        }
+        if(!empty($request->shippings)){
+            $salesdata = $salesdata->whereIn('shipping', $request->shippings);
+        }
+        if(!empty($request->b_citys)){
+            $salesdata = $salesdata->whereIn('b_city', $request->b_citys);
+        }
+        if(!empty($request->skus)){
+            $salesdata = $salesdata->whereIn('skus', $request->skus);
+        }
+        if(!empty($request->main_industries)){
+            $salesdata = $salesdata->whereIn('main_industry', $request->main_industries);
+        }
+        if(!empty($request->sub_industries)){
+            $salesdata = $salesdata->whereIn('sub_industry', $request->sub_industries);
+        }
+        if(!empty($request->types)){
+            $salesdata = $salesdata->whereIn('type', $request->types);
+        }
+        if((!empty($request->startdate) && $request->startdate =! '') && (!empty($request->enddate) && $request->enddate)){
+            $salesdata = $salesdata->whereBetween('created', array($request->startdate,$request->endadate));
+        }
         $column = $params['order'][0]['column'];
         $order = $params['order'][0]['dir'];
         $columnname = $params['columns'][$column]['data'];
@@ -71,7 +115,7 @@ class DatabaseController extends Controller
         $salesdata = $salesdata->get();
         foreach ($salesdata as $row) {
             $id = encrypt($row->id);
-            $actions = '<a href="" class=""><i class=" far fa-edit" style="font-size: 12px;"></i></a>';
+            $actions = '<a href="javascript:void(0);" data-id="'.encrypt($row->id).'" data-backdrop="static" data-keyboard="false" data-target=".sales_view_modal" data-toggle="modal" class="viewsales" title="view" ><i class=" far fa-eye" style="font-size: 12px;"></i></a>&nbsp&nbsp&nbsp&nbsp&nbsp<a href="javascript:void(0);" data-id="'.encrypt($row->id).'" data-backdrop="static" data-keyboard="false" data-target=".sales_edit_modal" data-toggle="modal" class="editsales" ><i class=" far fa-edit" style="font-size: 12px;"></i></a>';
             $rowData['id'] = $row->id;
             $rowData['order_id'] = $row->order_id;
             $rowData['created'] = (!empty($row->created)) ? date('d M Y',strtotime($row->created)) : 'N/A';
@@ -529,4 +573,43 @@ class DatabaseController extends Controller
         return \Response::json($arr);
     }
 
+    public function storeSalesData(Request $request) {
+        $rules = [
+            'order_id' => 'required',
+            'id' => 'required',
+            'email' => 'email',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            $arr = array("status" => 400, "msg" => $validator->errors()->first(), "result" => array());
+        } else {
+            try {
+                $id = decrypt($request->id);
+                $data = $request->except('_token');
+                $data['id'] = $id;
+                SalesData::where('id',$id)->update($data);
+                $msg = "User updated successfully.";
+                $arr = array("status" => 200, "msg" => $msg);
+            } catch (\Illuminate\Database\QueryException $ex) {
+                $msg = $ex->getMessage();
+                if (isset($ex->errorInfo[2])) :
+                    $msg = $ex->errorInfo[2];
+                endif;
+                $arr = array("status" => 400, "msg" => $msg, "result" => array());
+            } catch (\Exception $ex) {
+                $msg = $ex->getMessage();
+                if (isset($ex->errorInfo[2])) :
+                    $msg = $ex->errorInfo[2];
+                endif;
+                $arr = array("status" => 400, "msg" => $msg, "result" => array());
+            }
+            return \Response::json($arr);
+        }
+    }
+
+    public function viewSalesData(Request $request) {
+        $dbid = decrypt($request->id);
+        $salesdata = SalesData::where('id',$dbid)->first();
+        return view('salesdata.show',compact('salesdata'));
+    }
 }

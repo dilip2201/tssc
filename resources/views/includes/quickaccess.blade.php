@@ -1,7 +1,7 @@
 <!-- begin::User Panel-->
 		<div id="kt_quick_user" class="offcanvas offcanvas-right p-10">
 			<!--begin::Header-->
-			
+
 			<!--end::Header-->
 			<!--begin::Content-->
 			<div class="offcanvas-content pr-5 mr-n5">
@@ -9,11 +9,11 @@
 				<div class="d-flex align-items-center mt-5">
 					<div class="symbol symbol-100 mr-5">
 						<div class="symbol-label" style="background-image:url('{{ URL::asset('public/assets/media/users/default-user-image.png') }}')"></div>
-						
+
 					</div>
 					<div class="d-flex flex-column">
 						<a href="#" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary">{{ auth()->user()->name }}</a>
-						@php 
+						@php
 						$role = 'Super admin';
 			            if(auth()->user()->role == 'dashboard') {
 			                $role = 'Dashboard';
@@ -27,7 +27,7 @@
 						@endphp
 						<div class="text-muted mt-1">{{ $role }}</div>
 						<div class="navi mt-2">
-							<a class="btn btn-sm btn-light-primary font-weight-bolder py-2 px-5" href="{{ route('logout') }}"
+							<a class="btn btn-sm btn-light-primary font-weight-bolder py-2 px-5 btngreen" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
@@ -38,17 +38,17 @@
 						</div>
 					</div>
 				</div>
-			
+
 				<div class="separator separator-dashed mt-8 mb-5"></div>
-				
-			
-			
+
+
+
 			</div>
-		
+
 		</div>
 		<!-- end::User Panel-->
-		
-		
+
+
 		<!--begin::Scrolltop-->
 		<div id="kt_scrolltop" class="scrolltop">
 			<span class="svg-icon">

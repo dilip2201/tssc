@@ -30,7 +30,7 @@
                        value="" >
             </div>
         </div>
-       
+
         <div class="col-sm-12 col-md-6">
             <div class="form-group">
                 <label for="role">Role</label>
@@ -43,15 +43,15 @@
             </div>
         </div>
 
-     
+
 
 
         <div class="col-sm-12 col-md-12">
             <div class="form-group">
-                <label for="status">Status</label>
+                <label for="status">Status (Inactive / Active)</label>
                 <span class="switch switch-outline switch-icon switch-success">
                     <label>
-                        <input type="checkbox" value="active" checked="checked" @if(!empty($user) && $user->status == 'active') checked="checked" @endif  name="status">
+                        <input type="checkbox" value="active" @if(empty($user) || (!empty($user) && $user->status == 'active')) checked="checked" @endif  name="status">
                         <span></span>
                     </label>
                 </span>
