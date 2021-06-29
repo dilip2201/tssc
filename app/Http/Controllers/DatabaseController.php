@@ -53,26 +53,11 @@ class DatabaseController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function editView($id)
+    public function editView(Request $request)
     {
-        try {
-            $dbid = decrypt($id);
-            $payment_methods = \DB::table('sales_data')->WhereNotNull('payment_method')->where('payment_method','!=','')->distinct()->pluck('payment_method')->toArray();
-            $payment_statuses = \DB::table('sales_data')->WhereNotNull('payment_status')->where('payment_status','!=','')->distinct()->pluck('payment_status')->toArray();
-            $taken_bys = \DB::table('sales_data')->WhereNotNull('taken_by')->where('taken_by','!=','')->distinct()->pluck('taken_by')->toArray();
-            $companies = \DB::table('sales_data')->WhereNotNull('company')->where('company','!=','')->distinct()->pluck('company')->toArray();
-            $shippings = \DB::table('sales_data')->WhereNotNull('shipping')->where('shipping','!=','')->distinct()->pluck('shipping')->toArray();
-            $b_citys = \DB::table('sales_data')->WhereNotNull('b_city')->where('b_city','!=','')->distinct()->pluck('b_city')->toArray();
-            $skus = \DB::table('sales_data')->WhereNotNull('skus')->where('skus','!=','')->distinct()->pluck('skus')->toArray();
-            $main_industries = \DB::table('sales_data')->WhereNotNull('main_industry')->where('main_industry','!=','')->distinct()->pluck('main_industry')->toArray();
-            $sub_industries = \DB::table('sales_data')->WhereNotNull('sub_industry')->where('sub_industry','!=','')->distinct()->pluck('sub_industry')->toArray();
-            $types = \DB::table('sales_data')->WhereNotNull('type')->where('type','!=','')->distinct()->pluck('type')->toArray();
-
-            return view('salesdata.edit',compact('payment_methods','payment_statuses','taken_bys','companies','shippings','b_citys','skus','main_industries','sub_industries','types'));
-
-        } catch (DecryptException $e) {
-            return Redirect::to('salesdata')->withErrors(['Invalid Database Id.']);
-        }
+            $dbid = decrypt($request->id);
+            $salesdata = SalesData::where('id',$dbid)->first();
+            return view('salesdata.edit',compact('salesdata'));
     }
 
 
@@ -121,7 +106,7 @@ class DatabaseController extends Controller
         $salesdata = $salesdata->get();
         foreach ($salesdata as $row) {
             $id = encrypt($row->id);
-            $actions = '<a href="'.url('salesdata/edit').'/'.encrypt($row->id).'" ><i class=" far fa-edit" style="font-size: 12px;"></i></a>';
+            $actions = '<a href="javascript:void(0);" data-id="'.encrypt($row->id).'" data-backdrop="static" data-keyboard="false" data-target=".sales_view_modal" data-toggle="modal" class="viewsales" title="view" ><i class=" far fa-eye" style="font-size: 12px;"></i></a>&nbsp&nbsp&nbsp&nbsp&nbsp<a href="javascript:void(0);" data-id="'.encrypt($row->id).'" data-backdrop="static" data-keyboard="false" data-target=".sales_edit_modal" data-toggle="modal" class="editsales" ><i class=" far fa-edit" style="font-size: 12px;"></i></a>';
             $rowData['id'] = $row->id;
             $rowData['order_id'] = $row->order_id;
             $rowData['created'] = (!empty($row->created)) ? date('d M Y',strtotime($row->created)) : 'N/A';
@@ -579,4 +564,43 @@ class DatabaseController extends Controller
         return \Response::json($arr);
     }
 
+    public function storeSalesData(Request $request) {
+        $rules = [
+            'order_id' => 'required',
+            'id' => 'required',
+            'email' => 'email',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            $arr = array("status" => 400, "msg" => $validator->errors()->first(), "result" => array());
+        } else {
+            try {
+                $id = decrypt($request->id);
+                $data = $request->except('_token');
+                $data['id'] = $id;
+                SalesData::where('id',$id)->update($data);
+                $msg = "User updated successfully.";
+                $arr = array("status" => 200, "msg" => $msg);
+            } catch (\Illuminate\Database\QueryException $ex) {
+                $msg = $ex->getMessage();
+                if (isset($ex->errorInfo[2])) :
+                    $msg = $ex->errorInfo[2];
+                endif;
+                $arr = array("status" => 400, "msg" => $msg, "result" => array());
+            } catch (\Exception $ex) {
+                $msg = $ex->getMessage();
+                if (isset($ex->errorInfo[2])) :
+                    $msg = $ex->errorInfo[2];
+                endif;
+                $arr = array("status" => 400, "msg" => $msg, "result" => array());
+            }
+            return \Response::json($arr);
+        }
+    }
+
+    public function viewSalesData(Request $request) {
+        $dbid = decrypt($request->id);
+        $salesdata = SalesData::where('id',$dbid)->first();
+        return view('salesdata.show',compact('salesdata'));
+    }
 }

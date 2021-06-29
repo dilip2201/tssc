@@ -28,7 +28,9 @@ Route::group(['middleware' => ['check-permission:superadmin']], function () {
 });
 Route::group(['prefix' => 'salesdata','middleware' => ['check-permission:superadmin']], function () {
 	Route::get('/', 'DatabaseController@index');
-	Route::get('edit/{id}', 'DatabaseController@editView');
+	Route::Post('/edit', 'DatabaseController@editView');
+	Route::Post('/store', 'DatabaseController@storeSalesData');
+	Route::Post('/show', 'DatabaseController@viewSalesData');
 	Route::post('/getall', 'DatabaseController@getAll')->name('salesdata.getall');
 	Route::get('/import', 'DatabaseController@import');
 	Route::post('/import', 'DatabaseController@importsubmit');

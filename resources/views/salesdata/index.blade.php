@@ -151,7 +151,7 @@ ul.multiselect-container.dropdown-menu::-webkit-scrollbar-thumb {
                 </div>
                 @endif
                 @if(!empty($main_industries))
-                <div class="col-lg-3 col-md-3 col-sm-3 mb-7 selectwith">
+                <div class="col-lg-4 col-md-3 col-sm-3 mb-7 selectwith">
                     <select id="multiple-checkboxes" class="main_industries" multiple="multiple">
 
                         @foreach($main_industries as $main_industry)
@@ -162,7 +162,7 @@ ul.multiselect-container.dropdown-menu::-webkit-scrollbar-thumb {
                 </div>
                 @endif
                 @if(!empty($sub_industries))
-                <div class="col-lg-3 col-md-3 col-sm-3 mb-7 selectwith">
+                <div class="col-lg-4 col-md-3 col-sm-3 mb-7 selectwith">
                     <select id="multiple-checkboxes" class="sub_industries" multiple="multiple">
 
                         @foreach($sub_industries as $sub_industry)
@@ -173,7 +173,7 @@ ul.multiselect-container.dropdown-menu::-webkit-scrollbar-thumb {
                 </div>
                 @endif
                 @if(!empty($types))
-                <div class="col-lg-3 col-md-3 col-sm-3 mb-7 selectwith">
+                <div class="col-lg-4 col-md-3 col-sm-3 mb-7 selectwith">
                     <select id="multiple-checkboxes" class="types" multiple="multiple">
 
                         @foreach($types as $type)
@@ -184,7 +184,7 @@ ul.multiselect-container.dropdown-menu::-webkit-scrollbar-thumb {
                 </div>
                 @endif
                 <div class="col-lg-3 col-md-3 col-sm-3 mb-7 selectwith">
-                   <button style="background: #71ba2b;" class="btn btn-primary clicktosearch">Search</button>
+                   <button style="background: #71ba2b;" class="btn btn-primary clicktosearch spinner-right spinner-white">Search</button>
                 </div>
             </div>
             <!--end::Search Form-->
@@ -211,8 +211,43 @@ ul.multiselect-container.dropdown-menu::-webkit-scrollbar-thumb {
                 </table>
             <!--end: Datatable-->
         </div>
+
     </div>
 </div>
+</div>
+<!-- modal -->
+<div class="modal fade sales_edit_modal" >
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title modaltitle"></h5>
+            </div>
+            <div class="modal-body saleseditform">
+                <div class="col-sm-12 col-md-12" style="text-align: center">
+                    <span class="spinner-success spinner-lg editformspinner"></span>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- modal -->
+<div class="modal fade sales_view_modal" >
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title modaltitle"></h5>
+            </div>
+            <div class="modal-body salesviewform">
+                <div class="col-sm-12 col-md-12" style="text-align: center">
+                    <span class="spinner-success spinner-lg editformspinner"></span>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
 </div>
     @push('link')
         <link href="{{ URL::asset('public/assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
@@ -230,9 +265,6 @@ ul.multiselect-container.dropdown-menu::-webkit-scrollbar-thumb {
     <script type="text/javascript">
         $(function(){
 
-            @if($errors->any())
-                Swal.fire("Oh no!", "{{$errors->first()}}", "error");
-            @endif
             $('body').on('click','.clicktosearch',function(){
                 $('#database').DataTable().ajax.reload();
             })
@@ -322,107 +354,184 @@ ul.multiselect-container.dropdown-menu::-webkit-scrollbar-thumb {
 
             });
 
-                    $('.payment_status').multiselect({
-              includeSelectAllOption: true,
-              selectAllText:' Select all',
-              filterPlaceholder: 'Search',
-              enableFiltering:true,
-              nonSelectedText: 'Payment Status',
+            $('.payment_status').multiselect({
+                includeSelectAllOption: true,
+                selectAllText: ' Select all',
+                filterPlaceholder: 'Search',
+                enableFiltering: true,
+                nonSelectedText: 'Payment Status',
 
 
             });
-                var startDate = '';
-                var endDate = '';
-                /* datatable */
-                var tbl = $("#database").DataTable({
-                    "responsive": true,
-                    "autoWidth": false,
-                    processing: true,
-                    serverSide: true,
-                    ajax: {
-                        'url': "{{ route('salesdata.getall') }}",
-                        'type': 'POST',
-                        'data': function (d) {
-                            d._token = "{{ csrf_token() }}";
-                            d.payment_method = $('.payment_method').val();
-                            d.takenby = $('.taken_bys').val();
-                            d.companies = $('.companies').val();
-                            d.shippings = $('.shippings').val();
-                            d.skus = $('.skus').val();
-                            d.b_citys = $('.b_citys').val();
-                            d.payment_status = $('.payment_status').val();
-                            d.startdate = startDate;
-                            d.enddate = endDate;
+            var startDate = '';
+            var endDate = '';
+            /* datatable */
+            var tbl = $("#database").DataTable({
+                "responsive": true,
+                "autoWidth": false,
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    'url': "{{ route('salesdata.getall') }}",
+                    'type': 'POST',
+                    'data': function (d) {
+                        d._token = "{{ csrf_token() }}";
+                        d.payment_method = $('.payment_method').val();
+                        d.takenby = $('.taken_bys').val();
+                        d.companies = $('.companies').val();
+                        d.shippings = $('.shippings').val();
+                        d.skus = $('.skus').val();
+                        d.b_citys = $('.b_citys').val();
+                        d.payment_status = $('.payment_status').val();
+                        d.startdate = startDate;
+                        d.enddate = endDate;
+                    }
+                },
+                'columnDefs': [
+                    {
+                        'targets': 0,
+                        'checkboxes': {
+                            'selectRow': true,
+                            'label': 'id'
                         }
-                    },
-                    'columnDefs': [
-                        {
-                            'targets': 0,
-                            'checkboxes': {
-                                'selectRow': true,
-                                'label' : 'id'
-                            }
-                        }
-                    ],
-                    'select': {
-                        'style': 'multi'
-                    },
-                    columns: [
-                        {data: 'id'},
-                        {data: 'order_id'},
-                        {data: 'created'},
-                        {data: 'name'},
-                        {data: 'email'},
-                        {data: 'total'},
-                        {data: 'company'},
-                        {data: 'action',  orderable: false},
-                    ]
+                    }
+                ],
+                'select': {
+                    'style': 'multi'
+                },
+                columns: [
+                    {data: 'id'},
+                    {data: 'order_id'},
+                    {data: 'created'},
+                    {data: 'name'},
+                    {data: 'email'},
+                    {data: 'total'},
+                    {data: 'company'},
+                    {data: 'action', orderable: false},
+                ]
+            });
+
+
+            /********** Delete User ************/
+            $('body').on('click', '.delete-databases', function () {
+
+                var selectedIds = tbl.columns().checkboxes.selected()[0];
+                var ids = [];
+                selectedIds.forEach(function (selectedId) {
+                    ids.push(selectedId);
                 });
-
-
-                /********** Delete User ************/
-                $('body').on('click', '.delete-databases', function () {
-
-                    var selectedIds = tbl.columns().checkboxes.selected()[0];
-                    var ids = [];
-                    selectedIds.forEach(function(selectedId) {
-                        ids.push(selectedId);
-                    });
-                    if(ids.length > 0) {
-                        Swal.fire({
-                            title: "Are you sure?",
-                            text: "You want to delete Sales.",
-                            icon: "warning",
-                            showCancelButton: true,
-                            confirmButtonText: "Yes"
-                        }).then(function(result) {
-                            if (result.value) {
-                                $.ajax({
-                                    url: '{{ url("salesdata/deletemultiple") }}',
-                                    type: 'POST',
-                                    headers: {
-                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                    },
-                                    data: {ids: ids},
-                                    success: function (data) {
-                                        if (data.status == 400) {
-                                            Swal.fire("Oh no!", "Something went wrong!", "error");
-                                        }
-                                        if (data.status == 200) {
-                                            location.reload();
-                                        }
-                                    },
-                                    error: function () {
+                if (ids.length > 0) {
+                    Swal.fire({
+                        title: "Are you sure?",
+                        text: "You want to delete Sales.",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Yes"
+                    }).then(function (result) {
+                        if (result.value) {
+                            $.ajax({
+                                url: '{{ url("salesdata/deletemultiple") }}',
+                                type: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                data: {ids: ids},
+                                success: function (data) {
+                                    if (data.status == 400) {
                                         Swal.fire("Oh no!", "Something went wrong!", "error");
                                     }
-                                });
-                            }
-                        });
-                    } else {
-                        Swal.fire("Warning!", "Please Select At least one record!", "warning");
-                    }
+                                    if (data.status == 200) {
+                                        location.reload();
+                                    }
+                                },
+                                error: function () {
+                                    Swal.fire("Oh no!", "Something went wrong!", "error");
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    Swal.fire("Warning!", "Please Select At least one record!", "warning");
+                }
+            });
+            /********* Add New User ************/
+            $('body').on('click', '.editsales', function () {
+                var id = $(this).data('id');
+                $('.modaltitle').text('Edit Salesdata');
+                $.ajax({
+                    url: "{{ url('salesdata/edit')}}",
+                    type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    data: {id: id},
+                    beforeSend: function () {
+                        $('.editformspinner').addClass('spinner');
+                    },
+                    success: function (data) {
+                        $('.saleseditform').html(data);
+                    },
                 });
             });
+
+            /********** Submit form ************/
+            $('body').on('submit', '.formsubmit', function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: $(this).attr('action'),
+                    data: new FormData(this),
+                    type: 'POST',
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    beforeSend: function () {
+                        $('.submitbutton').addClass('spinner');
+                    },
+                    success: function (data) {
+
+                        if (data.status == 400) {
+                            $('.submitbutton').removeClass('spinner');
+                            toastr.error(data.msg)
+                        }
+                        if (data.status == 200) {
+                            $('.submitbutton').removeClass('spinner');
+                            $('.sales_edit_modal').modal('hide');
+                            $('#database').DataTable().ajax.reload();
+                            toastr.success(data.msg, 'Success!')
+                        }
+                    },
+                });
+            });
+
+
+            /********* View Sales Details ************/
+            $('body').on('click', '.viewsales', function () {
+                var id = $(this).data('id');
+                $('.modaltitle').text('View Salesdata');
+                $.ajax({
+                    url: "{{ url('salesdata/show')}}",
+                    type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    data: {id: id},
+                    beforeSend: function () {
+                        $('.editformspinner').addClass('spinner');
+                    },
+                    success: function (data) {
+                        $('.salesviewform').html(data);
+                    },
+                });
+            });
+
+            /*********** Cancel form ***********/
+            $('body').on('click', '.resetaddeditform', function () {
+                let html = '<div class="col-sm-12 col-md-12" style="text-align: center">'+
+                    '<span class="spinner-success spinner-lg addformspinner"></span>'+
+                    '</div>';
+                $('.salesviewform').html(html);
+            });
+        });
         </script>
     @endpush
 @endsection
